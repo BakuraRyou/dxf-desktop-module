@@ -1,0 +1,116 @@
+{
+  "date": "2026-10-15",
+  "editor": "V2",
+  "baselineVersion": "1.5.0",
+  "moduleVersion": "1.6.0",
+  "widthMm": 1400,
+  "rotations": [
+    0,
+    180
+  ],
+  "mirroring": false,
+  "gapMm": 0,
+  "secondsPerInitialSearch": 30,
+  "secondsForAdditionalContinuation": 30,
+  "maximumParallelSearches": 2,
+  "notes": [
+    "Explorativer Vergleich auf drei vorhandenen Beispielen, keine statistische Aussage über weitere DXF-Dateien.",
+    "Version 1.5 verwendet einen nativen Suchprozess, Version 1.6 maximal zwei mit verschiedenen Seeds. Gleiche Laufzeit bedeutet daher nicht gleiche CPU-Zeit.",
+    "Der Fortsetzungslauf erhält zusätzlich 30 Sekunden; seine Verbesserung darf nicht allein der neuen Version zugeschrieben werden.",
+    "Laufzeitbegrenzte Suchen reagieren auf Rechnerlast. Die Ergebnisse garantieren keine reproduzierbare Verbesserung oder ein globales Optimum.",
+    "Start-Telemetrie wurde erst beim Eura-Vergleich ergänzt. Fehlende starts-Felder in den anderen Aufträgen bedeuten keine gemessene Aussage zur nativen Startübernahme.",
+    "Alle übernommenen Ergebnisse werden unabhängig auf vollständige Teilemenge, erlaubte Drehungen, Stoffbreite und Überschneidungen geprüft."
+  ],
+  "rows": [
+    {
+      "continuation": {
+        "lengthMm": 1170.15197725,
+        "elapsedMs": 30065.941862999993,
+        "acceptedNativeSolutions": 0
+      },
+      "file": "NelaBL-Grading.dxf",
+      "pieces": 10,
+      "baseline": {
+        "lengthMm": 1170.1680904140624,
+        "elapsedMs": 30104.283529,
+        "acceptedNativeSolutions": 4
+      },
+      "native": {
+        "lengthMm": 1170.15197725,
+        "elapsedMs": 30070.925065999996,
+        "acceptedNativeSolutions": 7
+      },
+      "savedMm": 0.016113164062289798,
+      "savedPercent": 0.0013769956807306357,
+      "continuedSavedMm": 0.0,
+      "continuedSavedPercent": 0.0
+    },
+    {
+      "continuation": {
+        "lengthMm": 13245.73828125,
+        "elapsedMs": 30707.577543,
+        "acceptedNativeSolutions": 10
+      },
+      "file": "EliHO_Grading mit Gegenknopf (1).dxf",
+      "pieces": 105,
+      "baseline": {
+        "lengthMm": 13465.1806640625,
+        "elapsedMs": 30666.407631,
+        "acceptedNativeSolutions": 32
+      },
+      "native": {
+        "lengthMm": 13479.642578125,
+        "elapsedMs": 30680.816426,
+        "acceptedNativeSolutions": 42
+      },
+      "savedMm": -14.4619140625,
+      "savedPercent": -0.1074023024518171,
+      "continuedSavedMm": 233.904296875,
+      "continuedSavedPercent": 1.7352410905507538
+    },
+    {
+      "continuation": {
+        "lengthMm": 1500.5657958984377,
+        "elapsedMs": 30113.405656999996,
+        "acceptedNativeSolutions": 1,
+        "starts": [
+          {
+            "rngSeed": 42,
+            "warmStarted": true
+          },
+          {
+            "rngSeed": 314159,
+            "warmStarted": true
+          }
+        ]
+      },
+      "file": "EuraKL326-p1.dxf",
+      "pieces": 16,
+      "baseline": {
+        "lengthMm": 1503.6302490234375,
+        "elapsedMs": 30116.396062,
+        "acceptedNativeSolutions": 17,
+        "starts": []
+      },
+      "native": {
+        "lengthMm": 1500.9688720703127,
+        "elapsedMs": 30121.332949999996,
+        "acceptedNativeSolutions": 17,
+        "starts": [
+          {
+            "rngSeed": 314159,
+            "warmStarted": false
+          },
+          {
+            "rngSeed": 42,
+            "warmStarted": false
+          }
+        ]
+      },
+      "savedMm": 2.6613769531247726,
+      "savedPercent": 0.1769967686439706,
+      "continuedSavedMm": 0.403076171875,
+      "continuedSavedPercent": 0.026854399140138728
+    }
+  ]
+}

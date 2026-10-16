@@ -1,0 +1,221 @@
+{
+  "date": "2026-10-15",
+  "solver": "Sparrow 0.3.0 / jagua-rs 1.0.0",
+  "platform": "linux",
+  "architecture": "x64",
+  "objective": "minimum used length at fixed width, all parts placed",
+  "widthMm": 1400,
+  "rotationAngles": [
+    0,
+    180
+  ],
+  "mirroring": false,
+  "requestedGapMm": 0,
+  "nativeNumericalClearanceMm": 0.02,
+  "gridMm": 3,
+  "seed": 42,
+  "timeBudgetMsPerEngine": 30000,
+  "comparison": "Same module, native executable removed from isolated baseline copy; experimental learned model removed from both copies. All final layouts pass the existing integer polygon validator.",
+  "rows": [
+    {
+      "file": "EliHO_Grading mit Gegenknopf (1).dxf",
+      "pieces": 105,
+      "baseline": {
+        "lengthMm": 14102,
+        "elapsedMs": 31043.822561999998,
+        "acceptedNativeSolutions": 0
+      },
+      "native": {
+        "lengthMm": 13398.9814453125,
+        "elapsedMs": 30538.13492,
+        "acceptedNativeSolutions": 35
+      },
+      "savedMm": 703.0185546875,
+      "savedPercent": 4.985240070114168
+    },
+    {
+      "file": "HitJA126-Gradierung (2).dxf",
+      "pieces": 116,
+      "baseline": {
+        "lengthMm": 12381.83317,
+        "elapsedMs": 31338.475470999998,
+        "acceptedNativeSolutions": 0
+      },
+      "native": {
+        "lengthMm": 12090.1753225625,
+        "elapsedMs": 30472.367469,
+        "acceptedNativeSolutions": 25
+      },
+      "savedMm": 291.6578474375001,
+      "savedPercent": 2.355530424559097
+    },
+    {
+      "file": "NelaBL-Grading.dxf",
+      "pieces": 10,
+      "baseline": {
+        "lengthMm": 1219.620361,
+        "elapsedMs": 30092.728798,
+        "acceptedNativeSolutions": 0
+      },
+      "native": {
+        "lengthMm": 1170.2962652578126,
+        "elapsedMs": 30092.476732999996,
+        "acceptedNativeSolutions": 5
+      },
+      "savedMm": 49.32409574218741,
+      "savedPercent": 4.0442171448946
+    },
+    {
+      "file": "EuraKL326-p1.dxf",
+      "pieces": 16,
+      "baseline": {
+        "lengthMm": 1575.783935,
+        "elapsedMs": 30143.396459,
+        "acceptedNativeSolutions": 0
+      },
+      "native": {
+        "lengthMm": 1502.7810058593752,
+        "elapsedMs": 30141.074325,
+        "acceptedNativeSolutions": 17
+      },
+      "savedMm": 73.0029291406247,
+      "savedPercent": 4.632800698061737
+    },
+    {
+      "file": "correct_PeratBL_Grading.dxf",
+      "pieces": 42,
+      "baseline": {
+        "lengthMm": 13382.878606155662,
+        "elapsedMs": 30233.053243,
+        "acceptedNativeSolutions": 0
+      },
+      "native": {
+        "lengthMm": 12940.887939875,
+        "elapsedMs": 30224.872712,
+        "acceptedNativeSolutions": 29
+      },
+      "savedMm": 441.9906662806625,
+      "savedPercent": 3.3026576664706653
+    },
+    {
+      "file": "correct_NoliLS326_40-52.dxf",
+      "pieces": 42,
+      "baseline": {
+        "lengthMm": 10101.364685,
+        "elapsedMs": 31106.724788,
+        "acceptedNativeSolutions": 0
+      },
+      "native": {
+        "lengthMm": 9272.17578125,
+        "elapsedMs": 30494.036104000003,
+        "acceptedNativeSolutions": 24
+      },
+      "savedMm": 829.1889037500005,
+      "savedPercent": 8.208681991070996
+    }
+  ],
+  "exploratory10SecondRuns": [
+    {
+      "file": "EliHO_Grading mit Gegenknopf (1).dxf",
+      "pieces": 105,
+      "baseline": {
+        "file": "EliHO_Grading mit Gegenknopf (1).dxf",
+        "pieces": 105,
+        "height": 14102,
+        "elapsedMs": 10495.085788
+      },
+      "native": {
+        "file": "EliHO_Grading mit Gegenknopf (1).dxf",
+        "pieces": 105,
+        "height": 14164,
+        "elapsedMs": 10443.529969000001
+      }
+    },
+    {
+      "file": "HitJA126-Gradierung (2).dxf",
+      "pieces": 116,
+      "baseline": {
+        "file": "HitJA126-Gradierung (2).dxf",
+        "pieces": 116,
+        "height": 12381.83317,
+        "elapsedMs": 11018.347683
+      },
+      "native": {
+        "file": "HitJA126-Gradierung (2).dxf",
+        "pieces": 116,
+        "height": 12382.89917,
+        "elapsedMs": 11282.031337999999
+      }
+    },
+    {
+      "file": "NelaBL-Grading.dxf",
+      "pieces": 10,
+      "baseline": {
+        "file": "NelaBL-Grading.dxf",
+        "pieces": 10,
+        "height": 1249.926026,
+        "elapsedMs": 10090.748661000001
+      },
+      "native": {
+        "file": "NelaBL-Grading.dxf",
+        "pieces": 10,
+        "height": 1170.6021734609376,
+        "elapsedMs": 10064.068471000002
+      }
+    },
+    {
+      "file": "EuraKL326-p1.dxf",
+      "pieces": 16,
+      "baseline": {
+        "file": "EuraKL326-p1.dxf",
+        "pieces": 16,
+        "height": 1651.779043,
+        "elapsedMs": 10116.416064000001
+      },
+      "native": {
+        "file": "EuraKL326-p1.dxf",
+        "pieces": 16,
+        "height": 1588.9753417968752,
+        "elapsedMs": 10099.145375
+      }
+    },
+    {
+      "file": "correct_PeratBL_Grading.dxf",
+      "pieces": 42,
+      "baseline": {
+        "file": "correct_PeratBL_Grading.dxf",
+        "pieces": 42,
+        "height": 13437.936018,
+        "elapsedMs": 10493.058325999998
+      },
+      "native": {
+        "file": "correct_PeratBL_Grading.dxf",
+        "pieces": 42,
+        "height": 13437.936018,
+        "elapsedMs": 10189.289846
+      }
+    },
+    {
+      "file": "correct_NoliLS326_40-52.dxf",
+      "pieces": 42,
+      "baseline": {
+        "file": "correct_NoliLS326_40-52.dxf",
+        "pieces": 42,
+        "height": 10101.364685,
+        "elapsedMs": 10709.220603000002
+      },
+      "native": {
+        "file": "correct_NoliLS326_40-52.dxf",
+        "pieces": 42,
+        "height": 9653.014037875,
+        "elapsedMs": 11479.332798999996
+      }
+    }
+  ],
+  "limitations": [
+    "Six accepted DXF files only; three contour-warning files excluded.",
+    "Original coordinates assumed to be millimetres where DXF unit metadata is missing.",
+    "A fixed seed does not remove time-budget and machine-load variation.",
+    "Ten-second exploratory runs were slightly worse on two large jobs; no universal quality guarantee or proof of global optimality."
+  ]
+}

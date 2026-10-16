@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "models": [
+    {
+      "id": "nester",
+      "runtime": "bundled",
+      "checkpoint": "nester/checkpoint.pt",
+      "maxPieces": 8,
+      "task": "fixed-width-strip-v1",
+      "supportsRotationRestrictions": true,
+      "executable": "nester/predict"
+    },
+    {
+      "id": "rl4co",
+      "runtime": "bundled",
+      "checkpoint": "rl4co/checkpoint.pt",
+      "maxPieces": 105,
+      "task": "fixed-width-strip-v1",
+      "supportsRotationRestrictions": true,
+      "executable": "rl4co/predict"
+    }
+  ],
+  "platform": "linux",
+  "architecture": "x64"
+}
