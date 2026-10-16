@@ -5,7 +5,7 @@ async function fixture(t){
  const source=path.join(root,'source'),output=path.join(root,'release');await fs.mkdir(source);
  await fs.writeFile(path.join(source,'worker.cjs'),'module.exports = {};');
  await fs.writeFile(path.join(source,'animatus-module.json'),JSON.stringify({apiVersion:1,id:'dxf-packing',name:'DXF-Berechnung',version:'1.7.1',entry:'worker.cjs',operations:['pack-v3'],platforms:['linux'],architectures:['x64']}));
- const packages=JSON.parse(await fs.readFile(path.resolve(__dirname,'../../module-marketplace/.temp/system-packages/packages.json')));
+ const packages=[require('./fixtures/online-package.cjs')];
  const template={id:'dxf-packing',online:packages.find(item=>item.id==='dxf-editor-online'),marketplace:{name:'DXF Editor'}};
  const {prepareDeployment}=await script;const descriptor=prepareDeployment({source,output,template});return {root,source,output,template,descriptor};
 }
@@ -19,12 +19,16 @@ test('changed prepared files abort before publishing',async t=>{
  const f=await fixture(t),{deploy}=await script;await fs.writeFile(path.join(f.output,'files/worker.cjs'),'changed');let calls=0;
  await assert.rejects(deploy(['--no-build','--release='+f.output],{publish:async()=>calls++}),/nach dem Build verändert/);assert.equal(calls,0);
 });
-test('deployment code supports a separate module checkout with an explicit shared-tooling path',async t=>{
+test('deployment code supports a separate module checkout without shared tooling',async t=>{
  const f=await fixture(t),previous=process.env.ANIMATUS_MODULES_ROOT;t.after(()=>{if(previous===undefined)delete process.env.ANIMATUS_MODULES_ROOT;else process.env.ANIMATUS_MODULES_ROOT=previous;});
- process.env.ANIMATUS_MODULES_ROOT=path.resolve(__dirname,'../../..');
- await fs.copyFile(path.resolve(__dirname,'../scripts/deploy.mjs'),path.join(f.root,'deploy.mjs'));
- await fs.copyFile(path.resolve(__dirname,'../scripts/build-platform.mjs'),path.join(f.root,'build-platform.mjs'));
- const relocated=await import(pathToFileURL(path.join(f.root,'deploy.mjs')));
+ process.env.ANIMATUS_MODULES_ROOT='/no-shared-workspace';
+ await fs.mkdir(path.join(f.root,'scripts'));
+ await fs.cp(path.resolve(__dirname,'../sdk'),path.join(f.root,'sdk'),{recursive:true});
+ await fs.copyFile(path.resolve(__dirname,'../scripts/publisher.cjs'),path.join(f.root,'scripts/publisher.cjs'));
+ await fs.copyFile(path.resolve(__dirname,'../scripts/deploy.mjs'),path.join(f.root,'scripts/deploy.mjs'));
+ await fs.copyFile(path.resolve(__dirname,'../scripts/build-platform.mjs'),path.join(f.root,'scripts/build-platform.mjs'));
+ await fs.copyFile(path.resolve(__dirname,'../scripts/rust-toolchain.mjs'),path.join(f.root,'scripts/rust-toolchain.mjs'));
+ const relocated=await import(pathToFileURL(path.join(f.root,'scripts/deploy.mjs')));
  const result=relocated.prepareDeployment({source:f.source,output:path.join(f.root,'relocated-release'),template:f.template});assert.equal(result.id,'dxf-packing');
 });
 

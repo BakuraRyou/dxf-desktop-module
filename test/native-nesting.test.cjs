@@ -5,10 +5,10 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { createRequire } = require('node:module');
-const { LocalModules } = require('../../../Animatus-Desktop/src/core/modules.cjs');
-const requireEditor = createRequire(require.resolve('../../dxf-editor-v2/package.json'));
+const { LocalModules } = require('../sdk/modules.cjs');
+const requireEditor = createRequire(require.resolve('../package.json'));
 requireEditor('tsx/cjs');
-const { buildPolyVariants, packDrawableBlocks, validateRealBoundingPlacements } = require('../../dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/util.ts');
+const { buildPolyVariants, packDrawableBlocks, validateRealBoundingPlacements } = require('../vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/util.ts');
 const binary = process.platform === 'win32' ? 'animatus-nesting.exe' : 'animatus-nesting';
 function triangle(name) {
   const outline = { closed: true, kind: 'outline', layer: '1', points: [{ x: -50, y: 200 }, { x: 50, y: 200 }, { x: -50, y: 300 }] };
@@ -120,7 +120,7 @@ test('native searches use distinct seeds and accept a shorter valid warm start',
 
 test('an installed module continues a valid layout without increasing fabric length', async t => {
   if (!fs.existsSync(path.resolve(__dirname, '../dist', binary))) return t.skip('portable build has no native solver');
-  const { createPackingStartLayout } = require('../../dxf-editor-v2/src/frontend/lib/packing-start-layout.ts');
+  const { createPackingStartLayout } = require('../vendor/dxf-editor-v2/src/frontend/lib/packing-start-layout.ts');
   const { modules,input } = fixture(t);
   const first = await modules.run({module:'dxf-packing',operation:'pack-nesting-v2',input});
   const initialLayout = createPackingStartLayout(first.placements,input.blocks,input.fabricWidth,180);

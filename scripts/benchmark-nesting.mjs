@@ -19,9 +19,9 @@ if (!Number.isFinite(seconds) || seconds < 1 || seconds > 300) throw new Error('
 const workers = Number(options.workers || 2);
 const continueSeconds = Number(options['continue-seconds'] || 0);
 if (![1,2,3].includes(workers) || !Number.isFinite(continueSeconds) || continueSeconds < 0 || continueSeconds > 300) throw Error('Ungültige Suchparameter');
-const requireEditor = createRequire(path.join(root, '../dxf-editor-v2/package.json'));
+const requireEditor = createRequire(import.meta.url);
 requireEditor('tsx/cjs');
-const { createPackingStartLayout } = requireEditor('./src/frontend/lib/packing-start-layout.ts');
+const { createPackingStartLayout } = requireEditor('../vendor/dxf-editor-v2/src/frontend/lib/packing-start-layout.ts');
 const nativeName = process.platform === 'win32' ? 'animatus-nesting.exe' : 'animatus-nesting';
 if (!fs.existsSync(path.join(root, 'dist', nativeName))) throw new Error('Baue zuerst das DXF-Modul mit der nativen Nesting-Engine.');
 const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'animatus-nesting-benchmark-'));
@@ -31,7 +31,8 @@ try {
   let datasetFile;
   if (options.dataset) datasetFile = path.resolve(caller, options.dataset);
   else {
-    const data = path.resolve(caller, options.data || path.join(root, '../../__mock'));
+    if(!options.data)throw Error('Gib mit --data einen DXF-Ordner oder mit --dataset einen vorbereiteten Datensatz an.');
+    const data = path.resolve(caller, options.data);
     const prepared = path.join(scratch, 'dataset');
     const { stdout } = await promisify(execFile)(process.execPath, [path.join(root, 'training/train.mjs'), `--data=${data}`, '--gap=0', `--output=${prepared}`, '--prepare-only'], { timeout: 600000, maxBuffer: 4 * 1024 * 1024 });
     process.stdout.write(stdout); datasetFile = path.join(prepared, 'dataset.json');

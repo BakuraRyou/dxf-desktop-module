@@ -1,7 +1,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { createRequire } = require('node:module');
-const requireEditor = createRequire(require.resolve('../../dxf-editor-v2/package.json'));
+const requireEditor = createRequire(require.resolve('../package.json'));
 requireEditor('tsx/cjs');
 const { createDesktopPackingWorker, runDesktopPacking, installedDesktopPacking, observeDesktopPacking } = require('../client.ts');
 function bridge(t, available = true) {

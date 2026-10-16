@@ -7,7 +7,7 @@ async function fixture(t,arch='arm64'){
  for(const file of ['animatus-nesting','dxf-raster-packer']){await fs.writeFile(path.join(source,file),header);await fs.chmod(path.join(source,file),0o755);}
  await fs.writeFile(path.join(source,'worker.cjs'),'module.exports = {};');
  await fs.writeFile(path.join(source,'animatus-module.json'),JSON.stringify({apiVersion:1,id:'dxf-packing',name:'DXF-Berechnung',version:'1.7.1',entry:'worker.cjs',operations:['pack-v2','pack-v3'],platforms:['darwin'],architectures:[arch],nesting:{platform:'darwin',architecture:arch}}));
- const releases=JSON.parse(await fs.readFile(path.resolve(__dirname,'../../module-marketplace/.temp/system-packages/packages.json')));
+ const releases=[require('./fixtures/online-package.cjs')];
  return {source,output:path.join(root,'release'),arch,template:{id:'dxf-packing',marketplace:{name:'DXF Editor'},online:releases.find(r=>r.id==='dxf-editor-online')}};
 }
 test('Linux and unsupported architectures fail before building or uploading',async()=>{const {requireMac}=await script;assert.throws(()=>requireMac('linux','x64'),/auf einem Mac/);assert.throws(()=>requireMac('darwin','ia32'));requireMac('darwin','arm64');requireMac('darwin','x64');});

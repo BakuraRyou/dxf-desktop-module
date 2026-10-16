@@ -484,12 +484,38 @@ Der Paketordner enthält `catalog-entry.json` und `files/`. Die Mac-Architektur 
 anhand der nativen Dateien geprüft. `deploy --release=…` wird abgewiesen, damit ein
 Deploy nicht unbemerkt den Build überspringt.
 
-Profil, `gcloud.json` und GCS-/MySQL-Abhängigkeiten bleiben im Hauptprojekt.
-`--host-root=PFAD` wählt dieses Projekt. Nach einem Repo-Umzug muss
-`ANIMATUS_MODULES_ROOT` auf einen vorhandenen Animatus-Modules-Checkout mit den
-gemeinsamen Deploymentwerkzeugen zeigen. Das Modul braucht keine eigenen Zugangsdaten.
+Das Package ist eigenständig: Ein Checkout oder eine Kopie nur dieses Ordners
+reicht aus. Es greift beim Build, Training, Testen und Paketieren nicht auf
+Animatus-Desktop, dxf-editor-v2/v3 oder einen Modules-Checkout zu.
 
-Der Build verwendet weiterhin gemeinsame V2/V3-Quellen in der Nachbarstruktur;
-ein Checkout nur dieses Modulordners enthält diese Abhängigkeiten noch nicht.
+```sh
+npm ci
+npm run build:portable # V2/V3 mit dem mitgelieferten WASM-Kern, ohne Rust
+npm test
+# Vollständiges natives Paket auf dem jeweiligen Zielsystem:
+npm run build:mac     # alternativ build:win oder build:linux
+```
+
+Node >=22.12 und die aus package-lock.json installierten npm-Pakete werden benötigt.
+Für native Pakete kommen Rust >=1.90 sowie Compiler/Linker des Zielsystems hinzu.
+Endnutzer benötigen diese Build-Werkzeuge nicht. Cargo lädt gegebenenfalls die in
+Cargo.lock festgelegten Registry-Abhängigkeiten; „eigenständig“ bedeutet keinen
+benachbarten Projekt-Checkout, nicht einen Build ohne Registry-Zugriff.
+
+Die benötigten Editor-Quellen sind unter `vendor/` enthalten, die Modul-Protokoll-
+und Paketierungswerkzeuge unter `sdk/`. `vendor/sources.json` hält die Prüfsummen
+fest. Änderungen an diesen Quellen werden ausdrücklich in diesem Package geprüft
+und mit einer neuen Package-Version veröffentlicht; benachbarte Editor-Änderungen
+verändern einen Modulbuild nicht automatisch. Die Modulversion stammt aus package.json.
+
+Deployment liest lokal `.env.deploy` oder die mit `ANIMATUS_MARKETPLACE_ENV`
+angegebene Datei. Benötigt werden MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD,
+MYSQL_DATABASE=k229934_marketplace und GOOGLE_CLOUD_BUCKET_NAME=anim-marktplatz.
+Google-Zugangsdaten kommen aus GOOGLE_APPLICATION_CREDENTIALS, einer lokalen
+gcloud.json oder den üblichen Application Default Credentials. Für die Website-
+Aktivierung sind zusätzlich WEBSITE_SALT und NEXTAUTH_SECRET nötig. Diese Dateien
+sind ausgeschlossen und werden nicht in das Modulpaket übernommen. Es wurden keine
+Zugangsdaten kopiert. Der Build selbst benötigt keine Deployment-Zugangsdaten.
+
 `release:mac` bleibt als kombinierter Mac-Befehl erhalten. `--help` zeigt die
 Optionen ohne Build oder Upload.

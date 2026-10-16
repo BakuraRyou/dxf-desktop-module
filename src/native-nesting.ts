@@ -1,9 +1,9 @@
 import { spawn, type ChildProcess } from 'node:child_process';
 import { createInterface } from 'node:readline';
 import { availableParallelism } from 'node:os';
-import type { ContinuousNestingBackend } from '../../dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/types';
+import type { ContinuousNestingBackend } from '../vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/types';
 
-import { createNativeProblem } from '../../dxf-editor-v2/src/frontend/lib/continuous-nesting-codec';
+import { createNativeProblem } from '../vendor/dxf-editor-v2/src/frontend/lib/continuous-nesting-codec';
 export { createNativeProblem };
 
 const active = new Set<Promise<void>>();

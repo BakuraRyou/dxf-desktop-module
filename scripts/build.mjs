@@ -1,4 +1,5 @@
 import { bundleModels } from './model-bundle.mjs';
+import {requireCargo} from './rust-toolchain.mjs';
 import { buildNesting } from './build-nesting.mjs';
 import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -6,7 +7,7 @@ import { mkdirSync, rmSync, writeFileSync, readFileSync, copyFileSync, chmodSync
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 const root = fileURLToPath(new URL('..', import.meta.url));
-const require = createRequire(path.join(root, '../dxf-editor-v2/package.json'));
+const require = createRequire(import.meta.url);
 const { build } = await import(pathToFileURL(require.resolve('vite')).href);
 const args = process.argv.slice(2);
 if (args.some(arg => !['--native', '--with-models', '--portable'].includes(arg) && !arg.startsWith('--models=') && !arg.startsWith('--order-model='))) throw new Error('Unterstützte Optionen: --native, --portable, --with-models, --models=<Ordner>, --order-model=<Checkpoint>');
@@ -16,6 +17,8 @@ const orderModelFile = args.find(arg => arg.startsWith('--order-model='))?.slice
 const policy = createRequire(import.meta.url)('../src/order-policy.cjs');
 const orderModel = orderModelFile ? policy.validateDeployment(JSON.parse(readFileSync(path.resolve(orderModelFile), 'utf8'))) : null;
 const native = args.includes('--native');
+if(native)requireCargo();
+const moduleVersion=JSON.parse(readFileSync(path.join(root,'package.json'),'utf8')).version;
 const release = path.join(root, 'dist');
 const models = path.resolve(args.find(arg => arg.startsWith('--models='))?.slice('--models='.length) || path.join(root, 'models'));
 if (models === release || models.startsWith(release + path.sep)) throw new Error('Der Modellquellordner muss außerhalb von dist liegen.');
@@ -26,16 +29,17 @@ const modelBundle = await bundleModels({ source: models, output, required: args.
 const nesting = args.includes('--portable') ? null : buildNesting(output);
 if (orderModel) writeFileSync(path.join(output, 'order-policy.json'), JSON.stringify(orderModel) + '\n');
 for (const version of ['v2', 'v3']) {
-  await build({ configFile: false, root: path.join(root, `../dxf-editor-${version}`), publicDir: false, envDir: false,
+  await build({ configFile: false, root, publicDir: false, envDir: false,
+    plugins:[{name:'module-source-boundary',generateBundle(){for(const id of this.getModuleIds()){if(path.isAbsolute(id) && !id.includes('/node_modules/') && !id.includes('\\node_modules\\')){const relative=path.relative(root,id.split('?')[0]);if(relative==='..' || relative.startsWith('..'+path.sep))throw Error('Der Modulbuild greift auf fremde Projektquellen zu.');}}}}],
     ssr: { noExternal: true }, build: { target: 'node22', outDir: output, emptyOutDir: false,
       ssr: path.join(root, `src/${version}.ts`), minify: false,
       rollupOptions: { output: { format: 'es', entryFileNames: `engine-${version}.mjs` } } } });
 }
 if (native) {
   // Build only the host platform's binary. End users need neither Cargo nor Node.
-  execFileSync(process.execPath, [path.join(root, '../dxf-editor-v2/scripts/build-rust-packer.mjs'), '--native-only'], { stdio: 'inherit' });
+  execFileSync(process.execPath, [path.join(root, 'scripts/build-rust-packer.mjs'), '--native-only'], { stdio: 'inherit' });
   const name = process.platform === 'win32' ? 'dxf-raster-packer.exe' : 'dxf-raster-packer';
-  copyFileSync(path.join(root, '../dxf-editor-v2/electron/dist', name), path.join(output, name));
+  copyFileSync(path.join(root, '.temp/raster', name), path.join(output, name));
   chmodSync(path.join(output, name), 0o755);
 }
 writeFileSync(path.join(output, 'worker.cjs'), `const { workerData } = require('node:worker_threads');
@@ -44,7 +48,7 @@ if (!version) throw new Error('Unbekannte DXF-Berechnung');
 import('./engine-' + version + '.mjs').catch(error => { throw error; });
 `);
 writeFileSync(path.join(output, 'animatus-module.json'), JSON.stringify({
-  apiVersion: 1, id: 'dxf-packing', name: 'DXF-Berechnung', version: '1.7.1', entry: 'worker.cjs',
+  apiVersion: 1, id: 'dxf-packing', name: 'DXF-Berechnung', version: moduleVersion, entry: 'worker.cjs',
   operations: ['models-status-v2', 'pack-hybrid-v2', 'pack-target-v2', 'pack-configured-v2', 'pack-v2', 'pack-extreme-v2', 'poly-v2', 'pack-v3', 'poly-v3', ...(nesting ? ['pack-nesting-v2', 'pack-continue-v2'] : [])],
   ...((native || nesting || modelBundle.platform || modelBundle.architecture) ? { platforms: [process.platform], architectures: [process.arch] } : {}),
   ...(nesting ? { nesting } : {}),

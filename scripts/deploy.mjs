@@ -11,9 +11,7 @@ const BASE='https://marktplatz.animatus.de/api/file/static/files/marketplace/mod
 const CATALOG='https://marktplatz.animatus.de/api/file/static/files/marketplace/catalog.txt';
 const sha=body=>createHash('sha256').update(body).digest('hex');
 function tooling(){
- const workspace=path.resolve(process.env.ANIMATUS_MODULES_ROOT||path.resolve(root,'../..'));
- const load=relative=>{const file=path.join(workspace,relative);if(!fs.existsSync(file))throw Error('Animatus-Deploymentwerkzeuge fehlen. Setze ANIMATUS_MODULES_ROOT auf den Modules-Checkout.');return require(file);};
- return {packageModule:load('Animatus-Desktop/scripts/package-module.cjs').packageModule,...load('Animatus-Desktop/src/core/module-installation.cjs'),...load('packages/module-marketplace/server/system-packages.cjs'),site:load('marktplatz/scripts/site.cjs')};
+ return {packageModule:require('../sdk/package-module.cjs').packageModule,...require('../sdk/module-installation.cjs'),...require('../sdk/system-packages.cjs'),site:require('./publisher.cjs')};
 }
 export function prepareDeployment({source,output,template}){
  const {packageModule,validateSystemPackage}=tooling();
@@ -49,7 +47,7 @@ export async function validateDeployment(output,descriptor){
 }
 export async function deploy(args=process.argv.slice(2),{fetchImpl=fetch,publish,build=buildModule,sourceDirectory=path.join(root,'dist')}={}){
  args=args.filter(arg=>arg!=='--');
- if(args.includes('--help')){console.log('Im DXF-Modul: pnpm run deploy\nBaut das native Modul für dieses Betriebssystem und veröffentlicht es.\nBuild und Upload: deploy:mac | deploy:win | deploy:linux\nNur vorhandenes Paket veröffentlichen: pnpm run publish -- --release=PAKETORDNER\nOptionen: --no-build, --platform=darwin|win32|linux, --host-root=HAUPTPROJEKT\nNach einem Repo-Umzug: ANIMATUS_MODULES_ROOT auf den lokalen Animatus-Modules-Checkout setzen.\nProfil und gcloud.json bleiben im Hauptprojekt.');return;}
+ if(args.includes('--help')){console.log('Im DXF-Modul: pnpm run deploy\nBaut das native Modul für dieses Betriebssystem und veröffentlicht es.\nBuild und Upload: deploy:mac | deploy:win | deploy:linux\nNur vorhandenes Paket veröffentlichen: pnpm run publish -- --release=PAKETORDNER\nOptionen: --no-build, --platform=darwin|win32|linux, --host-root=HAUPTPROJEKT\nDeployment: lokale .env.deploy und GOOGLE_APPLICATION_CREDENTIALS oder gcloud.json konfigurieren.');return;}
  if(args.some(arg=>arg!=='--no-build'&&!arg.startsWith('--platform=')&&!arg.startsWith('--release=')&&!arg.startsWith('--host-root=')))throw Error('Unbekannte Option. Nutze --help.');
  const {site,readBytes}=tooling();
  const hostArg=args.find(arg=>arg.startsWith('--host-root='));

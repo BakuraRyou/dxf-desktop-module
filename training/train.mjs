@@ -5,7 +5,7 @@ import { fork } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 const require = createRequire(import.meta.url), policy = require('../src/order-policy.cjs');
-const editorRequire = createRequire(new URL('../../dxf-editor-v2/package.json', import.meta.url));
+const editorRequire = createRequire(new URL('../package.json', import.meta.url));
 const args = process.argv.slice(2), options = {};
 const allowed = ['data', 'output', 'gap', 'width', 'grid', 'epochs', 'samples', 'seed', 'learning-rate', 'compaction-ms', 'timeout-seconds', 'sizes'];
 for (const arg of args) {

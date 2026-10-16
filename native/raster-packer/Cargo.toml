@@ -1,0 +1,19 @@
+[package]
+name = "dxf-raster-packer"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "dxf_raster_core"
+crate-type = ["rlib", "cdylib"]
+
+[[bin]]
+name = "dxf-raster-packer"
+path = "src/main.rs"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true

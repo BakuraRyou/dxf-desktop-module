@@ -4,9 +4,9 @@ import {
   parseDxfTextInBrowser, buildDrawableBlocks, deriveBlockNameMap, detectHelperBaseSizeFromMarkers,
   prepareBlocksForWorker, computeBlockOutlineArea, buildPolyVariants, compactPlacementsVectorProgressive,
   validateRealBoundingPlacements, packPolyOrderProgressive,
-} from '../../dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/util';
-import { detectContourWarnings } from '../../dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/contour-diagnostics';
-import { rustWasmRasterBackend } from '../../dxf-editor-v2/src/frontend/lib/rust-raster-wasm';
+} from '../vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/util';
+import { detectContourWarnings } from '../vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/contour-diagnostics';
+import { rustWasmRasterBackend } from '../vendor/dxf-editor-v2/src/frontend/lib/rust-raster-wasm';
 const policy = createRequire(import.meta.url)('../src/order-policy.cjs');
 
 // Parser diagnostics belong on stderr, never in the IPC result.

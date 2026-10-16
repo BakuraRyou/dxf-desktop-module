@@ -3,10 +3,10 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { LocalModules } = require('../../../Animatus-Desktop/src/core/modules.cjs');
-const { ModuleInstallation } = require('../../../Animatus-Desktop/src/core/module-installation.cjs');
-const { packageModule } = require('../../../Animatus-Desktop/scripts/package-module.cjs');
-const { resolveModule } = require('../../../Animatus-Desktop/src/core/module-catalog.cjs');
+const { LocalModules } = require('../sdk/modules.cjs');
+const { ModuleInstallation } = require('../sdk/module-installation.cjs');
+const { packageModule } = require('../sdk/package-module.cjs');
+const { resolveModule } = require('../sdk/module-catalog.cjs');
 
 function rectangle(name, width = 102, height = 102) {
   const outline = { closed: true, kind: 'outline', layer: '14', points: [
@@ -106,7 +106,7 @@ test('tab ownership and cancellation release a waiting distributed search', asyn
 });
 
 test('intentional module cancellation reaches the Desktop IPC adapter as a normal stopped result', async t => {
-  const { moduleRunResult } = require('../../../Animatus-Desktop/src/core/module-run-result.cjs');
+  const { moduleRunResult } = require('../sdk/module-run-result.cjs');
   const f = fixture(t);
   f.modules.install(path.resolve(__dirname, '../dist'));
   let ready;
@@ -130,7 +130,7 @@ test('invalid geometry fails in the worker and frees its execution slot', async 
 test('updated editor reaches the installed module through the streaming bridge', async t => {
   const f = fixture(t);
   const { createRequire } = require('node:module');
-  const requireEditor = createRequire(require.resolve('../../dxf-editor-v2/package.json'));
+  const requireEditor = createRequire(require.resolve('../package.json'));
   requireEditor('tsx/cjs');
   const { createDesktopPackingWorker } = require('../client.ts');
   const installation = new ModuleInstallation({ modules: f.modules, catalog: [f.descriptor],
@@ -189,9 +189,9 @@ test('V2 real bounding returns a valid result when compaction rounds a fractiona
     assert.equal(result.placements.length, 2);
     for (const p of result.placements) assert.ok(p.x + p.width <= fabricWidth + 0.0001);
     const { createRequire } = require('node:module');
-    const requireEditor = createRequire(require.resolve('../../dxf-editor-v2/package.json'));
+    const requireEditor = createRequire(require.resolve('../package.json'));
     requireEditor('tsx/cjs');
-    const { validateRealBoundingPlacements } = require('../../dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/util.ts');
+    const { validateRealBoundingPlacements } = require('../vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/util.ts');
     assert.equal(validateRealBoundingPlacements(result.placements, fabricWidth), true);
     if (fabricWidth > 204) assert.ok(Math.abs(result.usedHeight - 100) < 0.01);
   }
@@ -202,11 +202,11 @@ test('V2 finishes after the complete preview for 105 real DXF contours', async t
   const f = fixture(t);
   f.modules.install(path.resolve(__dirname, '../dist'));
   const { createRequire } = require('node:module');
-  const requireEditor = createRequire(require.resolve('../../dxf-editor-v2/package.json'));
+  const requireEditor = createRequire(require.resolve('../package.json'));
   requireEditor('tsx/cjs');
-  const util = require('../../dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/util.ts');
+  const util = require('../vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/util.ts');
   const source = await util.parseDxfTextInBrowser(fs.readFileSync(
-    path.resolve(__dirname, '../../../__mock/dxf-examples/correct_NoliLS326_40-52.dxf'), 'utf8'));
+    path.resolve(__dirname, 'fixtures/correct_NoliLS326_40-52.dxf'), 'utf8'));
   const nameMap = util.deriveBlockNameMap(source.blocks);
   const base = util.detectHelperBaseSizeFromMarkers(source.blocks, nameMap);
   const all = util.buildDrawableBlocks(source.blocks, null, {
@@ -284,9 +284,9 @@ test('Extreme V2 searches through the installed module and returns its shortest 
   assert.ok(progress.at(-1).attempts > 1);
   assert.equal(progress.at(-1).bestHeight, result.usedHeight);
   const { createRequire } = require('node:module');
-  const requireEditor = createRequire(require.resolve('../../dxf-editor-v2/package.json'));
+  const requireEditor = createRequire(require.resolve('../package.json'));
   requireEditor('tsx/cjs');
-  const { validateRealBoundingPlacements } = require('../../dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/util.ts');
+  const { validateRealBoundingPlacements } = require('../vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/util.ts');
   assert.equal(validateRealBoundingPlacements(result.placements, 180), true);
   assert.equal(f.modules.jobs.size, 0);
 });

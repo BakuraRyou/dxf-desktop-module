@@ -7,7 +7,7 @@ const { execFile } = require('node:child_process');
 const { promisify } = require('node:util');
 const run = promisify(execFile);
 const policy = require('../src/order-policy.cjs');
-const { LocalModules } = require('../../../Animatus-Desktop/src/core/modules.cjs');
+const { LocalModules } = require('../sdk/modules.cjs');
 function dxf(scale) {
   const pairs = ['0', 'SECTION', '2', 'HEADER', '9', '$INSUNITS', '70', '4', '0', 'ENDSEC', '0', 'SECTION', '2', 'BLOCKS'];
   for (let i = 0; i < 3; i++) {

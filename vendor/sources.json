@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "description": "Pinned source snapshot. Builds use these local files exclusively; source updates are explicit and reviewed.",
+  "files": [
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/lib/packing-runtime.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/lib/packing-runtime.ts",
+      "sha256": "4ec32288e4d531ec0ab170b6965d3b03d4557e48a072f6b248b9c5d7330f47fa"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/util.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/util.ts",
+      "sha256": "7c3bec18f09d82e9a6459dabe12ccd46129e24e563d1aa039c5a8ea0d8947640"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/bounding-settings.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/bounding-settings.ts",
+      "sha256": "acbdbac75c2057222ba2961abc9cb6a6685a94a174e9303ef8fd4a284c7f40cd"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/lib/extreme-order-search.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/lib/extreme-order-search.ts",
+      "sha256": "4edfa2ca0d223cdf62b42216fceb746e745756bfbc6ce72d461f68ec16d425a1"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/types.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/types.ts",
+      "sha256": "6fcc6b384f9d7a586b9aaee71dc91969129e09c1b262dde7f3f46201eb36188e"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/lib/packing-start-layout.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/lib/packing-start-layout.ts",
+      "sha256": "3d75c52df77c0a80037261e7f0ff1d2efb4670cc01695ce122d904fd089f0324"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/lib/dxf-layer-semantics.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/lib/dxf-layer-semantics.ts",
+      "sha256": "d965dc8515e0a35585ad856ab9c169ceac45fb2466299da65d7d4982ed187293"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/mapParserEntityToDxfEntity.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/mapParserEntityToDxfEntity.ts",
+      "sha256": "4a88e5f4800988b2b1d5809b5c70e70cf78c8fc164f54c29dc8826fc49b36d74"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/vars.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/vars.ts",
+      "sha256": "4b9f6a0a4474c873cf63dd62ba78291737701ccd3d2ac7ba763bf371801045a3"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/lib/rust-raster-wasm.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/lib/rust-raster-wasm.ts",
+      "sha256": "6fbe8c9da500e817abdbb4a693dcdfa7f0ea50a6a808f2f1297533ccb563af00"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/generated/rust-packer-wasm.ts",
+      "source": "packages/dxf-editor-v2/src/generated/rust-packer-wasm.ts",
+      "sha256": "1308d69e8a5a061f0b8c235c6f634a7376d86ff19240bfec070576d7109f550d"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/lib/raster-packing-codec.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/lib/raster-packing-codec.ts",
+      "sha256": "3d4c8b605d99a9719c1ee9f6977e6f865b89907c32d9e1bec906b8ed5afa1e0a"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/electron/rust-raster-backend.ts",
+      "source": "packages/dxf-editor-v2/src/electron/rust-raster-backend.ts",
+      "sha256": "d943d17e1fde13195ad8790550cdcd8166863f17bd637b9a21afbf8694722a17"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/lib/continuous-nesting-codec.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/lib/continuous-nesting-codec.ts",
+      "sha256": "4971feb70f3d1249d872da46bc4efce7b15fbe34061b4bda54e5c77256a76ad7"
+    },
+    {
+      "path": "vendor/dxf-editor-v3/src/frontend/lib/packing-runtime.ts",
+      "source": "packages/dxf-editor-v3/src/frontend/lib/packing-runtime.ts",
+      "sha256": "8752e19f8213cee817e7883d518ac17a718670358a0a2e9a85c406c910d757ee"
+    },
+    {
+      "path": "vendor/dxf-editor-v3/src/frontend/components/dxf-editor-v3/editor/util.ts",
+      "source": "packages/dxf-editor-v3/src/frontend/components/dxf-editor-v3/editor/util.ts",
+      "sha256": "89a04671799661602665a34ffd1a5a08c2e623a9b3e4a4101bea810f422901f8"
+    },
+    {
+      "path": "vendor/dxf-editor-v3/src/frontend/lib/dxf-layer-semantics.ts",
+      "source": "packages/dxf-editor-v3/src/frontend/lib/dxf-layer-semantics.ts",
+      "sha256": "d965dc8515e0a35585ad856ab9c169ceac45fb2466299da65d7d4982ed187293"
+    },
+    {
+      "path": "vendor/dxf-editor-v3/src/frontend/components/dxf-editor-v3/editor/mapParserEntityToDxfEntity.ts",
+      "source": "packages/dxf-editor-v3/src/frontend/components/dxf-editor-v3/editor/mapParserEntityToDxfEntity.ts",
+      "sha256": "fb65ff1ab7e377085b6a70a0a264d07341b24bdeb1d4d9371a909e7eb4e29588"
+    },
+    {
+      "path": "vendor/dxf-editor-v3/src/frontend/components/dxf-editor-v3/editor/types.ts",
+      "source": "packages/dxf-editor-v3/src/frontend/components/dxf-editor-v3/editor/types.ts",
+      "sha256": "8027385db8408a6f2ac8c2f0e34521dd9c9388cd3ede9e5713ed5c7e43c175c5"
+    },
+    {
+      "path": "vendor/dxf-editor-v3/src/frontend/components/dxf-editor-v3/editor/vars.ts",
+      "source": "packages/dxf-editor-v3/src/frontend/components/dxf-editor-v3/editor/vars.ts",
+      "sha256": "eab442f7568c8eaf5337abf8c97a63862ad77fbfa0e2902fdfee7a0d90661e95"
+    },
+    {
+      "path": "vendor/dxf-editor-v3/src/frontend/lib/rust-raster-wasm.ts",
+      "source": "packages/dxf-editor-v3/src/frontend/lib/rust-raster-wasm.ts",
+      "sha256": "11b6d99843cc85f14fb6be38338fb11fefb9c6157f6e8febf2d4aa64bd744bb6"
+    },
+    {
+      "path": "vendor/dxf-editor-v3/src/generated/rust-packer-wasm.ts",
+      "source": "packages/dxf-editor-v3/src/generated/rust-packer-wasm.ts",
+      "sha256": "1308d69e8a5a061f0b8c235c6f634a7376d86ff19240bfec070576d7109f550d"
+    },
+    {
+      "path": "vendor/dxf-editor-v3/src/frontend/lib/raster-packing-codec.ts",
+      "source": "packages/dxf-editor-v3/src/frontend/lib/raster-packing-codec.ts",
+      "sha256": "29b94fc85af432d7ab232ab0536bf7716502ecf5319acd365fd700da9b6a5d4a"
+    },
+    {
+      "path": "vendor/dxf-editor-v3/src/electron/rust-raster-backend.ts",
+      "source": "packages/dxf-editor-v3/src/electron/rust-raster-backend.ts",
+      "sha256": "4c65b0952df75aad1bd3c919cc550918274f3cceb3c7b1f4f0fc4c691be21cd4"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/contour-diagnostics.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/contour-diagnostics.ts",
+      "sha256": "7572cc3f9d9dd520f4b3b53f88924b9f9cf0cfa2118a941ab5be94dfeb59a6fc"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/contour-repair.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/contour-repair.ts",
+      "sha256": "b1b35e3143c847f4d439767a472fd1dc998c5a8112d92db186a803ccc744f9a4"
+    },
+    {
+      "path": "sdk/store.cjs",
+      "source": "Animatus module protocol tooling",
+      "sha256": "972febb759c7e2f7e64cdf233cda4717db46e660928166ebb674426a4f8a6225"
+    },
+    {
+      "path": "sdk/system-packages.cjs",
+      "source": "Animatus module protocol tooling",
+      "sha256": "9a1f4ff4a8d28db8ae4bd307bc66c9fd0c3a6f5f185aafde0fd88cdd2f57446a"
+    },
+    {
+      "path": "sdk/module-installation.cjs",
+      "source": "Animatus module protocol tooling",
+      "sha256": "a803d9b02222ef36c7639863fd3d96d721b153beb5a06a75540dee9ccb665225"
+    },
+    {
+      "path": "sdk/package-module.cjs",
+      "source": "Animatus module protocol tooling",
+      "sha256": "e6ee6dc4f549f65b05c791513348a315477a55b318fce733cbc9f3a60ce53aca"
+    },
+    {
+      "path": "sdk/module-catalog.cjs",
+      "source": "Animatus module protocol tooling",
+      "sha256": "75a391b1af44b013c366646b1d718966eb9cf348c0f8e3bc51b77a1bbbfb3bf7"
+    },
+    {
+      "path": "sdk/module-run-result.cjs",
+      "source": "Animatus module protocol tooling",
+      "sha256": "03e74ceaf2c555543b5160ac0574999163015cb97786e3620f17bd3fb9481f43"
+    },
+    {
+      "path": "sdk/mysql-schema.cjs",
+      "source": "Animatus module protocol tooling",
+      "sha256": "31b8738102b19adcf774f4b1749cfa96914067019be85bb8519910fb255048bb"
+    },
+    {
+      "path": "sdk/module-trust.cjs",
+      "source": "Animatus module protocol tooling",
+      "sha256": "7fb653b5f874ad88c002f78042192c6366df4448e009947b426842dbd07e676b"
+    },
+    {
+      "path": "sdk/modules.cjs",
+      "source": "Animatus module protocol tooling",
+      "sha256": "f21272631bd7341c9696edfafb4d452dc95e78831d67d88082d7b17269305828"
+    },
+    {
+      "path": "sdk/module-run-limits.cjs",
+      "source": "Animatus module protocol tooling",
+      "sha256": "0a165381b239c6f9ffc3aff179f813aeabb838de9451f48b887316b6598d3e63"
+    },
+    {
+      "path": "sdk/source-manifest.cjs",
+      "source": "Animatus module protocol tooling",
+      "sha256": "0dd7930acf6ac20e1de5879220ac19e5f45428b4be482156b44212bafef2ad11"
+    }
+  ]
+}

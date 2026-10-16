@@ -16,6 +16,23 @@
     "build:win": "node scripts/build-platform.mjs --platform=win32",
     "deploy:win": "node scripts/deploy.mjs --platform=win32",
     "build:linux": "node scripts/build-platform.mjs --platform=linux",
-    "deploy:linux": "node scripts/deploy.mjs --platform=linux"
+    "deploy:linux": "node scripts/deploy.mjs --platform=linux",
+    "test": "node --test --test-timeout=30000 test/*.test.cjs",
+    "build:portable": "node scripts/build.mjs --portable"
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
+  "dependencies": {
+    "clipper-lib": "6.4.2",
+    "dxf-parser": "1.1.2"
+  },
+  "devDependencies": {
+    "vite": "7.3.1",
+    "tsx": "4.20.6",
+    "dotenv": "17.2.3",
+    "mysql2": "^3.15.3",
+    "@google-cloud/storage": "^7.17.0",
+    "jsonwebtoken": "^9.0.2"
   }
 }

@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, mkdirSync, cpSync, copyFileSync, writeFileSync, chmodSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import os from 'node:os';
+import {requireCargo} from './rust-toolchain.mjs';
 import path from 'node:path';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
@@ -22,8 +22,7 @@ export function buildNesting(output) {
   const digest = fingerprint(source).digest('hex');
   const cache = path.join(root, '.temp', `nesting-${process.platform}-${process.arch}-${digest.slice(0, 20)}`);
   if (!existsSync(path.join(cache, binary)) || !existsSync(path.join(cache, 'licenses/sources.json'))) {
-    const cargo = process.env.CARGO || path.join(os.homedir(), '.cargo/bin', process.platform === 'win32' ? 'cargo.exe' : 'cargo');
-    if (!existsSync(cargo)) throw new Error('Für den Nesting-Modulbuild wird Rust >= 1.90 benötigt. CARGO kann auf cargo zeigen. --portable baut die bisherige Raster-Suche ohne native Nesting-Engine.');
+    const cargo=requireCargo();
     const manifest = path.join(source, 'Cargo.toml');
     execFileSync(cargo, ['build', '--release', '--locked', '--manifest-path', manifest], { stdio: 'inherit' });
     const metadata = JSON.parse(execFileSync(cargo, ['metadata', '--locked', '--format-version=1', '--manifest-path', manifest], { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 }));

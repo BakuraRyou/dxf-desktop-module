@@ -1,4 +1,4 @@
-import { MAX_BOUNDING_TIME_MS } from '../../dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/bounding-settings';
+import { MAX_BOUNDING_TIME_MS } from '../vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/bounding-settings';
 import modelProviders from './model-providers.cjs';
 import orderPolicy from './order-policy.cjs';
 import { createNativeNestingBackend, waitForNestingExit } from './native-nesting';

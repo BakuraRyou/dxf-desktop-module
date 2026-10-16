@@ -2,3 +2,6 @@ dist/
 .temp/
 node_modules/
 native/**/target/
+
+.env*
+gcloud.json
