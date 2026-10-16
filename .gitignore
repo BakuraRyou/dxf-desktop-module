@@ -5,3 +5,4 @@ native/**/target/
 
 .env*
 gcloud.json
+!.env.deploy.example

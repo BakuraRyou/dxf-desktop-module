@@ -508,6 +508,7 @@ fest. Änderungen an diesen Quellen werden ausdrücklich in diesem Package gepr�
 und mit einer neuen Package-Version veröffentlicht; benachbarte Editor-Änderungen
 verändern einen Modulbuild nicht automatisch. Die Modulversion stammt aus package.json.
 
+Für Deployment `.env.deploy.example` nach `.env.deploy` kopieren und ausfüllen.
 Deployment liest lokal `.env.deploy` oder die mit `ANIMATUS_MARKETPLACE_ENV`
 angegebene Datei. Benötigt werden MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD,
 MYSQL_DATABASE=k229934_marketplace und GOOGLE_CLOUD_BUCKET_NAME=anim-marktplatz.

@@ -47,7 +47,7 @@ export async function validateDeployment(output,descriptor){
 }
 export async function deploy(args=process.argv.slice(2),{fetchImpl=fetch,publish,build=buildModule,sourceDirectory=path.join(root,'dist')}={}){
  args=args.filter(arg=>arg!=='--');
- if(args.includes('--help')){console.log('Im DXF-Modul: pnpm run deploy\nBaut das native Modul für dieses Betriebssystem und veröffentlicht es.\nBuild und Upload: deploy:mac | deploy:win | deploy:linux\nNur vorhandenes Paket veröffentlichen: pnpm run publish -- --release=PAKETORDNER\nOptionen: --no-build, --platform=darwin|win32|linux, --host-root=HAUPTPROJEKT\nDeployment: lokale .env.deploy und GOOGLE_APPLICATION_CREDENTIALS oder gcloud.json konfigurieren.');return;}
+ if(args.includes('--help')){console.log('Im DXF-Modul: pnpm run deploy\nBaut das native Modul für dieses Betriebssystem und veröffentlicht es.\nBuild und Upload: deploy:mac | deploy:win | deploy:linux\nNur vorhandenes Paket veröffentlichen: pnpm run publish -- --release=PAKETORDNER\nOptionen: --no-build, --platform=darwin|win32|linux, --host-root=KONFIGORDNER\nDeployment: lokale .env.deploy und GOOGLE_APPLICATION_CREDENTIALS oder gcloud.json konfigurieren.');return;}
  if(args.some(arg=>arg!=='--no-build'&&!arg.startsWith('--platform=')&&!arg.startsWith('--release=')&&!arg.startsWith('--host-root=')))throw Error('Unbekannte Option. Nutze --help.');
  const {site,readBytes}=tooling();
  const hostArg=args.find(arg=>arg.startsWith('--host-root='));
