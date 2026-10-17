@@ -10,7 +10,7 @@
     {
       "path": "vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/util.ts",
       "source": "packages/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/util.ts",
-      "sha256": "7c3bec18f09d82e9a6459dabe12ccd46129e24e563d1aa039c5a8ea0d8947640"
+      "sha256": "6b0399d7c6d8401cbcbfde831e1d3195d45b139c4633ff409f356295c11e6f90"
     },
     {
       "path": "vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/bounding-settings.ts",
@@ -25,12 +25,12 @@
     {
       "path": "vendor/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/types.ts",
       "source": "packages/dxf-editor-v2/src/frontend/components/dxf-editor-v2/editor/types.ts",
-      "sha256": "6fcc6b384f9d7a586b9aaee71dc91969129e09c1b262dde7f3f46201eb36188e"
+      "sha256": "5e9858dc0b96a3204dc170447679cc2fac750375e914ab3a64ace4f3d3820be6"
     },
     {
       "path": "vendor/dxf-editor-v2/src/frontend/lib/packing-start-layout.ts",
       "source": "packages/dxf-editor-v2/src/frontend/lib/packing-start-layout.ts",
-      "sha256": "3d75c52df77c0a80037261e7f0ff1d2efb4670cc01695ce122d904fd089f0324"
+      "sha256": "26bebed40c084d7c8517eeda920c0f6cbffa850f6c4b5955f5ce695d3a5ce173"
     },
     {
       "path": "vendor/dxf-editor-v2/src/frontend/lib/dxf-layer-semantics.ts",
@@ -186,6 +186,11 @@
       "path": "sdk/source-manifest.cjs",
       "source": "Animatus module protocol tooling",
       "sha256": "0dd7930acf6ac20e1de5879220ac19e5f45428b4be482156b44212bafef2ad11"
+    },
+    {
+      "path": "vendor/dxf-editor-v2/src/frontend/lib/grouped-rotation-search.ts",
+      "source": "packages/dxf-editor-v2/src/frontend/lib/grouped-rotation-search.ts",
+      "sha256": "bfef1c115af8db868929a9254e63696eceb95319cbb9dee1bf1140434dd490f2"
     }
   ]
 }

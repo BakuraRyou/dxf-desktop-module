@@ -172,6 +172,30 @@ am Desktop-IPC selbst benötigen einen manuellen Neustart der Desktop-App.
 Erwartete Abbrüche werden dort als `stopped` übertragen, damit Navigation und
 geschlossene Einstellungsfenster keinen Berechnungsfehler im IPC auslösen.
 
+## Systemsprache im Editor V2
+
+Der Editor übernimmt die Sprache über den bestehenden System-Hook
+`globalThis.dynamicHooks.useLocale()` und reagiert direkt auf dessen Änderungen.
+Eine eigene Sprachauswahl oder separate Sprachspeicherung ist nicht erforderlich.
+Deutsch, Englisch und Polnisch sind enthalten. Ohne System-Provider werden
+Sprachparameter, HTML-Sprache, vorhandene Locale-Cookies/-Vorgaben und die
+Browsersprache verwendet; nicht unterstützte Sprachen verwenden Englisch.
+
+Seitenleiste, Bounding-Einstellungen, Vorschau, gespeicherte Layouts,
+Design-/Dateiauswahl und Konturkorrektur verwenden dieselben Übersetzungen.
+Bekannte Worker-/Modulmeldungen werden bei der Anzeige übersetzt. Die
+Berechnung selbst und ihre Protokollwerte bleiben sprachunabhängig. Datei- und
+Schnittteilnamen bleiben unverändert; Zahlen und Datumsangaben folgen der
+gewählten Sprache. Die Sprache ändert weder die gespeicherten
+Bounding-Einstellungen noch laufende Berechnungen.
+
+Übersetzungen und Sprachauflösung liegen unter
+`packages/dxf-editor-v2/src/frontend/lib/i18n`. Die Tests lassen sich mit
+`npm --prefix packages/dxf-editor-v2 run test:i18n` ausführen. Zum Veröffentlichen
+der Oberfläche müssen die neu gebauten Komponenten `teeprint/dxf-editor-v2`
+und `teeprint/dxf-placement-queue` aktualisiert werden. Das native Rechenmodul
+benötigt für die Sprache keine Aktualisierung.
+
 ## Berechnungsort in der Vorschau (V2, ab 1.7.1)
 
 Die Bounding-Vorschau zeigt **Desktop-App** oder **Web / Browser** und das
@@ -204,6 +228,48 @@ Die Desktop-App räumt langen V2-Suchen die gewünschte Dauer plus eine Minute f
 Vorbereitung und Abschluss ein. Andere Modulaufträge behalten ihr bisheriges
 Zeitlimit. **Die Desktop-App muss für diese Änderung manuell neu gestartet
 werden.** Bereits laufende Server werden nicht neu gestartet.
+
+## Rotation je Größe koppeln (Editor V2)
+
+Die Checkbox in den Bounding-Einstellungen ist standardmäßig ausgeschaltet.
+Aktiviert bekommen alle Schnittteile mit derselben Größenangabe denselben
+Drehwinkel relativ zur jeweiligen DXF-Ausgangsgeometrie; ihre Positionen bleiben
+unabhängig. Andere Größen werden unabhängig behandelt, Teile ohne Größenangabe
+bleiben frei. Erlaubte Rotationsschritte und feste Teilvorgaben werden gemeinsam
+beachtet. Widersprüchliche Vorgaben oder eine für alle Teile unmögliche Stoffbreite
+werden vor dem Packen gemeldet.
+
+Die Vorbereitung vergleicht gemeinsame Winkel mit dem vorhandenen Rechteckpacker
+(maximal acht Kandidaten je Größe). Standard- und Real-Bounding verwenden diesen
+Startwinkel. **Extreme Bounding durchsucht ab Modul 1.8.0 zusätzlich Kombinationen
+der Größenwinkel**: zunächst ein begrenztes Portfolio gemeinsamer Winkel (bis zu
+24 Kombinationen, abhängig von der Suchdauer), danach die beste Anordnung mit der
+verbleibenden Zeit. Die eigentlichen Packverfahren bleiben unverändert.
+
+Alle Kombinationen und die anschließende Verfeinerung teilen sich die eingestellte
+Suchdauer. Sie laufen nacheinander; innerhalb eines Durchlaufs gilt unverändert
+die gewählte Anzahl paralleler Suchläufe. Es wird kein exponentieller Suchraum
+aufgebaut und kein globales Optimum garantiert. Feste Teilvorgaben, gemeinsame
+Winkel, Stoffbreite und Konturüberschneidungen werden weiterhin geprüft.
+„Weiteroptimieren“ beginnt mit den tatsächlich verwendeten Größenwinkeln der
+aktuellen Anordnung und behält das beste gültige Ergebnis. Ein erreichtes
+Längenziel oder Stop beendet das gesamte Portfolio. Der experimentelle Hybridmodus
+behält die feste Winkelauswahl; die Kombinationssuche gehört zu Extreme Bounding.
+
+Checkbox, Layout-JSON und Queue-Snapshot speichern die Option. Ein uneinheitlich
+gedrehtes altes Layout muss vor dem Export neu gepackt werden. Einzelrotation per
+Rechtsklick ist bei aktivierter Kopplung gesperrt. Das neue native Protokoll heißt
+`pack-grouped-v2`; fehlt es im installierten Modul, verwendet der Editor den
+aktualisierten Browserworker. Für die native Suche Modul 1.8.0 installieren:
+`npm --prefix Animatus-Desktop run module:dxf:install` (vom Modules-Verzeichnis).
+Die gebauten Editor-Komponenten und der Browserworker müssen ebenfalls über den
+üblichen Upload verteilt werden. Ein Deployment wird durch diese Änderung nicht
+automatisch ausgeführt.
+
+Prüfen im Editor-Package: `npm run test:grouped-rotation` und
+`npm run test:grouped-rotation:search`; mit gebautem lokalem Modul zusätzlich
+`npm run test:grouped-rotation:native` (isolierte Installation in einem temporären
+Verzeichnis, keine Änderungen am installierten Desktop-Modul).
 
 ## Bounding-Einstellungen (Editor V2, ab Modul 1.2.0)
 
@@ -498,6 +564,21 @@ npm run build:mac     # alternativ build:win oder build:linux
 
 Node >=22.12 und die aus package-lock.json installierten npm-Pakete werden benötigt.
 Für native Pakete kommen Rust >=1.90 sowie Compiler/Linker des Zielsystems hinzu.
+
+Auf dem Mac kannst du die Werkzeuge direkt im Modulordner vorbereiten:
+
+```bash
+pnpm run setup:mac
+pnpm run build:mac
+```
+
+`setup:mac` installiert Rust über den offiziellen Installer von
+[rustup](https://rust-lang.org/tools/install/) und richtet die aktuelle stabile
+Toolchain für diesen Projektordner ein. Falls die Xcode Command Line Tools fehlen,
+öffnet sich zuerst deren Installation. Schließe sie ab und führe den Befehl erneut
+aus. Ein neues Terminal ist für den anschließenden Build nicht nötig. Bestehende
+rustup-Installationen werden weiterverwendet; die globale Standard-Toolchain wird
+nicht geändert. Der Download benötigt Internetzugriff.
 Endnutzer benötigen diese Build-Werkzeuge nicht. Cargo lädt gegebenenfalls die in
 Cargo.lock festgelegten Registry-Abhängigkeiten; „eigenständig“ bedeutet keinen
 benachbarten Projekt-Checkout, nicht einen Build ohne Registry-Zugriff.

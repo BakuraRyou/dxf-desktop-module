@@ -19,3 +19,33 @@ test('incorrect native binaries and wrong platform descriptors cannot be publish
  const {prepareMacRelease,verifyMacBinary}=await script;assert.throws(()=>verifyMacBinary(Buffer.from('\x7fELFfake'),'arm64'),/keine passende macOS/);
  const f=await fixture(t);await fs.writeFile(path.join(f.source,'animatus-nesting'),Buffer.alloc(8));assert.throws(()=>prepareMacRelease(f),/keine passende macOS/);await assert.rejects(fs.stat(f.output),{code:'ENOENT'});
 });
+
+
+test('Mac release entry runs in an isolated checkout without marketplace or desktop folders',async t=>{
+ const {pathToFileURL}=require('node:url');
+ for(const arch of ['arm64','x64']) {
+  const f=await fixture(t,arch),checkout=path.join(path.dirname(f.source),'standalone');
+  await fs.mkdir(path.join(checkout,'scripts'),{recursive:true});
+  await fs.cp(path.resolve(__dirname,'../sdk'),path.join(checkout,'sdk'),{recursive:true});
+  for(const file of ['release-mac.mjs','publisher.cjs'])await fs.copyFile(path.resolve(__dirname,'../scripts',file),path.join(checkout,'scripts',file));
+  const {main}=await import(pathToFileURL(path.join(checkout,'scripts/release-mac.mjs')));
+  const events=[];
+  const options={platform:'darwin',arch,sourceDirectory:f.source,outputRoot:path.join(checkout,'releases'),
+   fetchImpl:async()=>{events.push('catalog');return Response.json({modules:[f.template]});},
+   run:(_node,args,options)=>{events.push('build');assert.equal(args[0],path.join(checkout,'scripts/build.mjs'));assert.equal(args[1],'--native');assert.equal(path.resolve(options.cwd),checkout);},
+   publish:async()=>{throw Error('Prepare-only must never publish');}};
+  const prepared=await main(['--prepare-only'],options);
+  assert.deepEqual(events,['catalog','build']);
+  assert.deepEqual(prepared.descriptor.platforms,['darwin']);assert.deepEqual(prepared.descriptor.architectures,[arch]);
+  assert.equal(JSON.parse(await fs.readFile(path.join(prepared.output,'release.json'))).architecture,arch);
+  await assert.rejects(fs.access(path.join(checkout,'marktplatz')),{code:'ENOENT'});
+  // Publishing uses that same prepared package and local configuration helper.
+  // Only the external write is replaced, so no credentials or network are used.
+  const publisher=require(path.join(checkout,'scripts/publisher.cjs'));
+  const configuration=publisher.configuration;publisher.configuration=()=>{events.push('configuration');};
+  t.after(()=>{publisher.configuration=configuration;});
+  let uploads=0;
+  await main([],{...options,publish:async request=>{uploads++;assert.equal(path.resolve(request.hostRoot),checkout);assert.deepEqual(request.descriptor.architectures,[arch]);}});
+  assert.equal(uploads,1);assert.ok(events.includes('configuration'));
+ }
+});

@@ -79,11 +79,12 @@ export function startModule(engine: Engines, baseURL: string) {
         input.extreme.preparationElapsedMs = (input.extreme.preparationElapsedMs || 0) + performance.now() - started;
       }
     }
+    if (operation === 'pack-grouped-v2' && (!input.extreme || !input.useRealBounding || input.extreme.strategy === 'hybrid')) throw new Error('Wähle Extreme Bounding, um die Konturen zu optimieren.');
     if (operation === 'pack-extreme-v2' && !input.extreme) throw new Error('Suchdauer fehlt');
     if (operation === 'pack-nesting-v2' && (!input.extreme || !input.useRealBounding || input.extreme.strategy === 'hybrid')) throw new Error('Wähle Extreme Bounding, um die Konturen zu optimieren.');
     if (operation === 'pack-configured-v2' && (!input.extreme || !input.useRealBounding)) throw new Error('Wähle Extreme Bounding und eine Suchdauer.');
     if (operation === 'pack-continue-v2' && (!input.initialLayout || !input.extreme || !input.useRealBounding || input.extreme.strategy === 'hybrid')) throw new Error('Wähle eine vorhandene Anordnung zum Weiteroptimieren.');
-    if (input.initialLayout && !['pack-continue-v2', 'pack-configured-v2'].includes(operation)) throw new Error('Aktualisiere das DXF-Modul zum Weiteroptimieren.');
+    if (input.initialLayout && !['pack-continue-v2', 'pack-configured-v2', 'pack-grouped-v2'].includes(operation)) throw new Error('Aktualisiere das DXF-Modul zum Weiteroptimieren.');
     if (cancelled) return;
     if (operation.startsWith('pack-')) {
       const scope = { postMessage(message: any) {
@@ -138,6 +139,8 @@ function validate(input: any) {
     || input.initialLayout.placements.some((p: any) => !p || !Number.isInteger(p.blockIndex) || ![p.x, p.y, p.angle].every(Number.isFinite)))) throw new Error('Ungültige Startanordnung');
   let points = 0;
   for (const block of input.blocks) {
+    if (block.rotationGroup !== undefined && (typeof block.rotationGroup !== 'string' || block.rotationGroup.length > 1000)) throw new Error('Ungültige Rotationskopplung');
+    if (block.rotationGroupAngles !== undefined && (!block.rotationGroup || !Array.isArray(block.rotationGroupAngles) || !block.rotationGroupAngles.length || block.rotationGroupAngles.length > 360 || block.rotationGroupAngles.some((angle: any) => !Number.isFinite(angle)))) throw new Error('Ungültige Rotationskopplung');
     if (!Array.isArray(block.packPaths) || !Array.isArray(block.paths)
       || !Number.isFinite(block.width) || !Number.isFinite(block.height)) throw new Error('Ungültige Kontur');
     for (const path of [...block.packPaths, ...block.paths]) {

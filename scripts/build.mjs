@@ -43,13 +43,13 @@ if (native) {
   chmodSync(path.join(output, name), 0o755);
 }
 writeFileSync(path.join(output, 'worker.cjs'), `const { workerData } = require('node:worker_threads');
-const version = workerData.operation === 'models-status-v2' ? 'v2' : /^(pack(?:-(?:extreme|hybrid|target|nesting|continue|configured))?|poly)-(v2|v3)$/.exec(workerData.operation)?.[2];
+const version = workerData.operation === 'models-status-v2' ? 'v2' : /^(pack(?:-(?:extreme|hybrid|target|nesting|continue|configured|grouped))?|poly)-(v2|v3)$/.exec(workerData.operation)?.[2];
 if (!version) throw new Error('Unbekannte DXF-Berechnung');
 import('./engine-' + version + '.mjs').catch(error => { throw error; });
 `);
 writeFileSync(path.join(output, 'animatus-module.json'), JSON.stringify({
   apiVersion: 1, id: 'dxf-packing', name: 'DXF-Berechnung', version: moduleVersion, entry: 'worker.cjs',
-  operations: ['models-status-v2', 'pack-hybrid-v2', 'pack-target-v2', 'pack-configured-v2', 'pack-v2', 'pack-extreme-v2', 'poly-v2', 'pack-v3', 'poly-v3', ...(nesting ? ['pack-nesting-v2', 'pack-continue-v2'] : [])],
+  operations: ['models-status-v2', 'pack-grouped-v2', 'pack-hybrid-v2', 'pack-target-v2', 'pack-configured-v2', 'pack-v2', 'pack-extreme-v2', 'poly-v2', 'pack-v3', 'poly-v3', ...(nesting ? ['pack-nesting-v2', 'pack-continue-v2'] : [])],
   ...((native || nesting || modelBundle.platform || modelBundle.architecture) ? { platforms: [process.platform], architectures: [process.arch] } : {}),
   ...(nesting ? { nesting } : {}),
   ...(modelBundle.included ? { models: modelBundle.models, selfContainedModels: true } : {}),

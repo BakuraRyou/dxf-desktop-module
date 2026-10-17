@@ -154,7 +154,8 @@ export function createDesktopPackingWorker(version: 'v2' | 'v3', browserWorker: 
           blocks: message.payload.useCache ? cachedBlocks : message.payload.blocks };
         void (async () => {
           try {
-            const operation = version === 'v2' && input.extreme?.timeBudgetMs > 300000 ? 'pack-configured-v2'
+            const operation = version === 'v2' && input.extreme && input.extreme.strategy !== 'hybrid' && input.blocks?.some((block: any) => block.rotationGroupAngles?.length > 0) ? 'pack-grouped-v2'
+              : version === 'v2' && input.extreme?.timeBudgetMs > 300000 ? 'pack-configured-v2'
               : version === 'v2' && input.extreme?.strategy === 'hybrid' ? 'pack-hybrid-v2'
               : version === 'v2' && input.extreme && input.initialLayout ? 'pack-continue-v2'
               : version === 'v2' && input.extreme ? 'pack-nesting-v2'

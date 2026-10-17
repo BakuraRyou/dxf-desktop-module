@@ -7,7 +7,6 @@ import {fileURLToPath} from 'node:url';
 import {execFileSync} from 'node:child_process';
 const require=createRequire(import.meta.url);
 const root=fileURLToPath(new URL('..',import.meta.url));
-const modulesRoot=root;
 const {packageModule}=require('../sdk/package-module.cjs');
 const {validateSystemPackage,readBytes}=require('../sdk/system-packages.cjs');
 const CATALOG='https://marktplatz.animatus.de/api/file/static/files/marketplace/catalog.txt';
@@ -62,23 +61,27 @@ function prepareMacDescriptor(output,descriptor,manifest){
  for(const name of ['animatus-nesting','dxf-raster-packer'])verifyMacBinary(fs.readFileSync(path.join(output,'files',name)),manifest.architectures[0]);
  return descriptor;
 }
-export async function main(args=process.argv.slice(2)){
+export async function main(args=process.argv.slice(2),{
+ platform=process.platform,arch=process.arch,fetchImpl=fetch,run=execFileSync,
+ sourceDirectory=path.join(root,'dist'),outputRoot=path.join(root,'.temp/releases'),publish=publishMacRelease
+}={}){
  args=args.filter(arg=>arg!=='--');
  if(args.includes('--help')){console.log('Im DXF-Modul auf dem Mac: pnpm run release:mac\nOptionen: --prepare-only, --host-root=PFAD\nBaut die Architektur dieses Macs und veröffentlicht die DXF-Variante im Animatus-Marktplatz.\nVoraussetzungen: Node >=22.12, installierte Projektabhängigkeiten, Rust >=1.90 und Xcode Command Line Tools.\nFür die Veröffentlichung werden eine lokale .env.deploy und Google-Zugangsdaten benötigt.');return;}
  if(args.some(arg=>arg!=='--prepare-only'&&!arg.startsWith('--host-root=')))throw Error('Unbekannte Option. Nutze --help.');
- requireMac();
+ requireMac(platform,arch);
  const [major,minor]=process.versions.node.split('.').map(Number);if(major<22||(major===22&&minor<12))throw Error('Node >=22.12 wird benötigt.');
- const site=require(path.join(modulesRoot,'marktplatz/scripts/site.cjs'));
+ const site=require('./publisher.cjs');
  const hostRoot=path.resolve(args.find(arg=>arg.startsWith('--host-root='))?.slice(12)||site.defaultHost);
  if(!args.includes('--prepare-only'))site.configuration(hostRoot);
- const response=await fetch(CATALOG,{redirect:'error',cache:'no-store',signal:AbortSignal.timeout(30000)});
+ const response=await fetchImpl(CATALOG,{redirect:'error',cache:'no-store',signal:AbortSignal.timeout(30000)});
  const catalog=JSON.parse(await readBytes(response,4*1024*1024));
  const template=catalog.modules?.find(item=>item.id==='dxf-packing'&&item.online);if(!template)throw Error('DXF-Angebot im Marktplatz nicht gefunden.');
- execFileSync(process.execPath,[path.join(root,'scripts/build.mjs'),'--native'],{cwd:modulesRoot,stdio:'inherit'});
- const parent=path.join(root,'.temp/releases');fs.mkdirSync(parent,{recursive:true});
- const output=path.join(parent,'darwin-'+process.arch+'-'+Date.now());
- const descriptor=prepareMacRelease({source:path.join(root,'dist'),output,template,arch:process.arch});
+ run(process.execPath,[path.join(root,'scripts/build.mjs'),'--native'],{cwd:root,stdio:'inherit'});
+ fs.mkdirSync(outputRoot,{recursive:true});
+ const output=path.join(fs.mkdtempSync(path.join(outputRoot,'darwin-'+arch+'-')),'package');
+ const descriptor=prepareMacRelease({source:sourceDirectory,output,template,arch});
  console.log('Mac-Paket vorbereitet: '+output);
- if(!args.includes('--prepare-only'))await publishMacRelease({output,descriptor,hostRoot});
+ if(!args.includes('--prepare-only'))await publish({output,descriptor,hostRoot,fetchImpl});
+ return {output,descriptor};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(error=>{console.error(error.message);process.exitCode=1;});

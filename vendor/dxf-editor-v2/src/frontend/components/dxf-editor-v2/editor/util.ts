@@ -1,6 +1,7 @@
-import { lengthTargetReached, MAX_BOUNDING_TIME_MS } from "./bounding-settings.ts";
-import { createExtremeOrderSearch } from "../../../lib/extreme-order-search.ts";
-import { packingGeometrySignature } from "../../../lib/packing-start-layout.ts";
+import { searchGroupedRotations } from "../../../lib/grouped-rotation-search";
+import { lengthTargetReached, MAX_BOUNDING_TIME_MS } from "./bounding-settings";
+import { createExtremeOrderSearch } from "../../../lib/extreme-order-search";
+import { packingGeometrySignature } from "../../../lib/packing-start-layout";
 
 
 import ClipperLib from "clipper-lib";
@@ -11,11 +12,11 @@ import {
     isPhysicalLayerVisible,
     isTurnCurveMetadataLayer,
     normalizeDxfLayer,
-} from "../../../lib/dxf-layer-semantics.ts";
-import { mapParserEntityToDxfEntity } from "./mapParserEntityToDxfEntity.ts";
-import { BlockVariant, Bounds, DrawableBlock, DrawPathOptions, DxfBlock, DxfEntity, DxfFile, DxfParserModule, InsertTransform, PackedItem, PackedVariant, PackNode, PlacedDrawableBlock, Point, PolylinePath, PolylineTypeHints, PolyPackedItem, PolyProgressiveAttemptOptions, PolyProgressiveOptions, PolyProgressiveResult, PolyVariant, ProgressiveAttemptOptions, ProgressivePackOptions } from "./types.ts";
-import { OUTLINE_MARGIN_MM, PACK_HEIGHT_GROWTH, PACK_MAX_ITERATIONS, PACK_PADDING, PAGE_MARGIN, POSITION_EPS } from "./vars.ts";
-import type { WorkerPreviewPlacement, DxfAnnotation } from "./types.ts";
+} from "../../../lib/dxf-layer-semantics";
+import { mapParserEntityToDxfEntity } from "./mapParserEntityToDxfEntity";
+import { BlockVariant, Bounds, DrawableBlock, DrawPathOptions, DxfBlock, DxfEntity, DxfFile, DxfParserModule, InsertTransform, PackedItem, PackedVariant, PackNode, PlacedDrawableBlock, Point, PolylinePath, PolylineTypeHints, PolyPackedItem, PolyProgressiveAttemptOptions, PolyProgressiveOptions, PolyProgressiveResult, PolyVariant, ProgressiveAttemptOptions, ProgressivePackOptions } from "./types";
+import { OUTLINE_MARGIN_MM, PACK_HEIGHT_GROWTH, PACK_MAX_ITERATIONS, PACK_PADDING, PAGE_MARGIN, POSITION_EPS } from "./vars";
+import type { WorkerPreviewPlacement, DxfAnnotation } from "./types";
 // Lazy import for browser DXF parsing (dxf-parser). Will be loaded only when needed.
 // We avoid static import to keep initial bundle light.
 
@@ -1056,6 +1057,9 @@ export async function progressivePackDrawableBlocksPoly(
     if (extreme && (!Number.isFinite(extreme.timeBudgetMs) || extreme.timeBudgetMs < 100 || extreme.timeBudgetMs > MAX_BOUNDING_TIME_MS
         || (extreme.maxAttempts !== undefined && (!Number.isInteger(extreme.maxAttempts) || extreme.maxAttempts < 1 || extreme.maxAttempts > 10000)))) {
         throw new Error("Wähle eine Suchdauer zwischen 0,1 und 86.400 Sekunden.");
+    }
+    if (extreme && extreme.strategy !== 'hybrid' && blocks.some(block => (block.rotationGroupAngles?.length ?? 0) > 1)) {
+        return searchGroupedRotations(blocks, fabricWidth, rotationStep, options!, progressivePackDrawableBlocksPoly, validateRealBoundingPlacements);
     }
     const timeBudgetMs = extreme ? Math.max(100, Math.min(MAX_BOUNDING_TIME_MS, extreme.timeBudgetMs)) : Infinity;
     const deadline = startedAt + timeBudgetMs;
@@ -2569,8 +2573,17 @@ export function validateRealBoundingPlacements(
     placements: PlacedDrawableBlock[],
     fabricWidth: number
 ): boolean {
+    const groupAngles = new Map<string, number>();
     for (let index = 0; index < placements.length; index += 1) {
         const placement = placements[index];
+        const group = placement.block.rotationGroup;
+        if (group) {
+            const angle = normalizeAngle(placement.variant.angle);
+            if (!Number.isFinite(angle)) return false;
+            const previous = groupAngles.get(group);
+            if (previous !== undefined && Math.min(normalizeAngle(angle - previous), normalizeAngle(previous - angle)) > 1e-6) return false;
+            groupAngles.set(group, angle);
+        }
         if (
             placement.x < -POSITION_EPS ||
             placement.y < -POSITION_EPS ||

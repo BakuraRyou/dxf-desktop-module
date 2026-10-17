@@ -1,4 +1,4 @@
-import type { DrawableBlock, PlacedDrawableBlock, PackingStartLayout } from '../components/dxf-editor-v2/editor/types.ts';
+import type { DrawableBlock, PlacedDrawableBlock, PackingStartLayout } from '../components/dxf-editor-v2/editor/types';
 
 /** Include actual vertices: contour repairs can preserve names, counts and bounds. */
 export function packingGeometrySignature(blocks: DrawableBlock[], fabricWidth: number, rotationStep: number | null, includeRules = true): string {
@@ -10,7 +10,7 @@ export function packingGeometrySignature(blocks: DrawableBlock[], fabricWidth: n
   };
   feed(fabricWidth); feed(rotationStep); feed(blocks.length);
   for (const block of blocks) {
-    feed(block.name); if (includeRules) { feed(block.rotationStepOverride); feed(block.manualAngleOverride); }
+    feed(block.name); if (includeRules) { feed(block.rotationStepOverride); if (block.rotationGroupAngles?.length) feed(block.rotationGroupAngles); else feed(block.manualAngleOverride); if (block.rotationGroup) feed(block.rotationGroup); }
     const paths = (block.packPaths?.length ? block.packPaths : block.paths).filter(p => p.closed && p.points.length >= 3);
     feed(paths.length);
     for (const path of paths) { feed(path.points.length); for (const p of path.points) { feed(p.x); feed(p.y); } }

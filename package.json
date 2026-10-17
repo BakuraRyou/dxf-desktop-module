@@ -1,7 +1,13 @@
 {
   "name": "animatus-dxf-desktop-module",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "private": true,
+  "animatusDesktopModule": {
+    "id": "dxf-packing",
+    "output": "dist",
+    "build": [{"script":"scripts/build.mjs","args":["--native"]}],
+    "marketplace": {"category":"Fertigung","publisher":"Animatus","name":"DXF Editor","description":"Ordne Schnittteile lokal an und berechne den Stoffverbrauch im DXF Editor."}
+  },
   "type": "module",
   "scripts": {
     "benchmark:nesting": "node scripts/benchmark-nesting.mjs",
@@ -9,6 +15,7 @@
     "build": "node scripts/build.mjs",
     "test:install": "node scripts/build.mjs && node --test --test-timeout=30000 test/*.test.cjs",
     "release:mac": "node scripts/release-mac.mjs",
+    "setup:mac": "node scripts/setup-mac.mjs",
     "build:mac": "node scripts/build-platform.mjs --platform=darwin",
     "deploy": "node scripts/deploy.mjs",
     "publish": "node scripts/deploy.mjs --no-build",

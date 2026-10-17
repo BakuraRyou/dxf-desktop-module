@@ -276,3 +276,30 @@ test('ordinary browsers and older bridges do not claim an installed desktop modu
  const f=bridge(t);assert.equal(await installedDesktopPacking(),false);
  globalThis.animatusDesktop=undefined;assert.equal(await installedDesktopPacking(),false);
 });
+
+test('group-angle optimization requests its own capability even for fixed groups, continuation and long budgets',async t=>{
+ const f=bridge(t);
+ f.modules.ensure=async request=>{assert.equal(request.operation,'pack-grouped-v2');return {available:true};};
+ const worker=createDesktopPackingWorker('v2',()=>{throw Error('unexpected browser fallback');});
+ t.after(()=>worker.terminate());
+ const done=message(worker);
+ worker.postMessage({type:'pack',payload:{blocks:[{rotationGroup:'xl',rotationGroupAngles:[0]}],useRealBounding:true,extreme:{timeBudgetMs:600000,workers:2},initialLayout:{signature:'test',placements:[]}}});
+ assert.equal((await done).type,'done');
+ assert.equal(f.calls[0].operation,'pack-grouped-v2');
+ assert.deepEqual(f.calls[0].input.blocks[0].rotationGroupAngles,[0]);
+ assert.equal(f.calls[0].input.extreme.timeBudgetMs,600000);
+});
+
+test('older desktop modules fall back before execution without dropping the group-angle choices',async t=>{
+ const f=bridge(t,false);
+ let payload;
+ const browser={postMessage:m=>{payload=m.payload;},terminate(){}};
+ const worker=createDesktopPackingWorker('v2',()=>browser);
+ t.after(()=>worker.terminate());
+ worker.postMessage({type:'pack',payload:{blocks:[{rotationGroup:'xl',rotationGroupAngles:[0,180]}],useRealBounding:true,extreme:{timeBudgetMs:120000}}});
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(f.calls.length,0);
+ assert.deepEqual(payload.blocks[0].rotationGroupAngles,[0,180]);
+ assert.equal(payload.extreme.timeBudgetMs,120000);
+ browser.onmessage({data:{type:'done',placements:[],usedHeight:1}});
+});

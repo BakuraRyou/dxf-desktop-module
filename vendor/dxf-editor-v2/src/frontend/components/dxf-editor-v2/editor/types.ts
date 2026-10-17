@@ -1,4 +1,4 @@
-import type { ModelCandidates } from "../../../../../../../model-contract.ts";
+import type { ModelCandidates } from "../../../../../../dxf-desktop-module/model-contract";
 
 export type ExtremeBoundingOptions = { timeBudgetMs: number; maxAttempts?: number; strategy?: "adaptive" | "hybrid"; preparationElapsedMs?: number; workers?: number };
 export type PackingStartLayout = { signature: string; placements: ModelCandidates['layouts'][number] };
@@ -117,6 +117,7 @@ export type SavedLayoutJsonV1 = {
   settings: {
     fabricWidth: number;
     rotationStep: number;
+    coupleRotationBySize?: boolean;
     includeHelperLines: boolean;
     // Deprecated (kept optional for backwards compatibility with older saved layouts).
     fixHelperScaling?: boolean;
@@ -227,6 +228,10 @@ export type DrawableBlock = {
   sizeLabel?: string;
   rotationStepOverride?: number | null;
   manualAngleOverride?: number | null;
+  /** Prepared common rotation; transported as a fixed angle to all existing backends. */
+  rotationGroup?: string;
+  /** Original shared allowed angles; Extreme Bounding searches their combinations. */
+  rotationGroupAngles?: number[];
   paths: PolylinePath[];
   annotations?: DxfAnnotation[];
   packPaths: PolylinePath[];
